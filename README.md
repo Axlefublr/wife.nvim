@@ -4,6 +4,8 @@
 
 WARNING: I expect you to have the latest stable neovim version.
 
+WARNING: this branch is not finished, don't use it
+
 Executing shell commands in neovim is kind of a hassle.
 
 `:term` is ugly, `:!` "Press ENTER"s you to death, and opening a new terminal split moves around the ui a bit too much.
