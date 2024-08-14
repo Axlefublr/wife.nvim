@@ -44,7 +44,7 @@ A good example of that is git — you usually don't care about the (useless) out
 
 If you put `;` (configurable) as the first character in your shell command:
 
-![](./img/split.png)
+![](./img/semicolon.png)
 
 , it (is removed from the command and) means "only show output if the command failed".
 
