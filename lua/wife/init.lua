@@ -27,11 +27,17 @@ end
 ---All the other public functions in this plugin don't care about this option.
 ---(and they use the `shell` option automatically)
 ---@field shell string
+---If you put *this character* (or string) as the first thing in
+---your `require('wife').interactive_shell()` command,
+---only errors are going to be displayed;
+---Meaning, output on successful execution of the shell command is ignored.
+---@field errorer string
 
 ---@type WifeOpts
 local plugin_opts = {
 	prompt = '󱕅 ',
 	shell = vim.o.shell,
+	errorer = ';',
 }
 
 ---@param opts WifeOpts?
@@ -156,6 +162,34 @@ function m.display(output, only_errors)
 	set_lines(output_lines)
 end
 
+-- ╔══════════════════════════════════════════════════════════════════════════════╗
+-- ║ Both `shell_display` and `interactive_shell` execute *syncronously*,         ║
+-- ║ rather than *asyncronously* due to a limitation.                             ║
+-- ║ You can't create windows or buffers in a callback.                           ║
+-- ║ `vim.system` lets you execute code after a shell command finishes            ║
+-- ║ using an `on_exit` function, which is a callback.                            ║
+-- ║ You can't put the logic for displaying the output                            ║
+-- ║ (in either vim.notify or a split) there;                                     ║
+-- ║ If you do, you'll get an error.                                              ║
+-- ║ This is also the reason why I'm using `vim.fn.input()` rather than           ║
+-- ║ `vim.ui.input` — the latter makes you have to handle the input               ║
+-- ║ asyncronously (meaning through a callback).                                  ║
+-- ║                                                                              ║
+-- ║ I thought about adding an alternative that uses `vim.ui.input`               ║
+-- ║ but prints the output to messages, but even considering something            ║
+-- ║ like `dressing.nvim` or `dress.nvim`, it doesn't make much sense             ║
+-- ║ to do that: part of the reason this plugin exists is because                 ║
+-- ║ seeing the output in messages is annoying.                                   ║
+-- ║                                                                              ║
+-- ║ Otherwise, you could just always ignore output unless it's an error,         ║
+-- ║ just so you could use a pretty `vim.ui.input`, but then I don't see much     ║
+-- ║ point in having two separate mappings, one of which uses vim.fn.input and is ║
+-- ║ syncronous, and another one that uses vim.ui.input, but is async (and ignores║
+-- ║ output, or only displays errors)                                             ║
+-- ║                                                                              ║
+-- ║ If you would like that still, submit a PR or issue.                          ║
+-- ╚══════════════════════════════════════════════════════════════════════════════╝
+
 ---Do `require('wife').shell()`, and display the output in a
 ---`vim.notify` if it's a single line,
 ---and in a new split if it's more than that.
@@ -169,17 +203,15 @@ function m.shell_display(cmd, only_errors, opts)
 	m.display(output, only_errors)
 end
 
--- TODO: explain why no vim.ui.input
-
 ---Enter a shell command at a prompt and `require('wife').shell_display()` it.
----If the first character is `;` (TODO: configurable), `only_errors` is set to true.
+---If the first character is `;` (configurable with the `errorer` option), `only_errors` is set to true.
 function m.interactive_shell()
 	local input = m.input({ plugin_opts.prompt, 'WifePrompt' }, nil, 'shellcmd')
 	if not input then return end
 
 	local only_errors = false
-	if input:sub(1, 1) == ';' then
-		input = input:sub(2)
+	if input:sub(1, #plugin_opts.errorer) == plugin_opts.errorer then
+		input = input:sub(#plugin_opts.errorer + 1)
 		only_errors = true
 	end
 	local args = { plugin_opts.shell, '-c', input }
