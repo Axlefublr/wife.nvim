@@ -33,8 +33,9 @@ If you put `;` (configurable) as the first character in your shell command, it (
 
 This is the reason why the last command I executed in that showcase didn't show any output — it succeeded.
 
-I was able to make input getting asyncronous (`vim.ui.input`),
-but command execution is _syncronous_ because of neovim callback restrictions. \
+I was able to make input getting use `vim.ui.input`, which is asyncronous,
+(thanks to @Quinntyx for suggesting an autocmd workaround that made it possible),
+but command execution is _syncronous_ because of neovim callback restrictions, still. \
 If a command you ran is taking worryingly long, you can always press <kbd>ctrl+c</kbd> to cancel it.
 
 ## Installation
