@@ -162,34 +162,6 @@ function m.display(output, only_errors)
 	set_lines(output_lines)
 end
 
--- ╔══════════════════════════════════════════════════════════════════════════════╗
--- ║ Both `shell_display` and `interactive_shell` execute *syncronously*,         ║
--- ║ rather than *asyncronously* due to a limitation.                             ║
--- ║ You can't create windows or buffers in a callback.                           ║
--- ║ `vim.system` lets you execute code after a shell command finishes            ║
--- ║ using an `on_exit` function, which is a callback.                            ║
--- ║ You can't put the logic for displaying the output                            ║
--- ║ (in either vim.notify or a split) there;                                     ║
--- ║ If you do, you'll get an error.                                              ║
--- ║ This is also the reason why I'm using `vim.fn.input()` rather than           ║
--- ║ `vim.ui.input` — the latter makes you have to handle the input               ║
--- ║ asyncronously (meaning through a callback).                                  ║
--- ║                                                                              ║
--- ║ I thought about adding an alternative that uses `vim.ui.input`               ║
--- ║ but prints the output to messages, but even considering something            ║
--- ║ like `dressing.nvim` or `dress.nvim`, it doesn't make much sense             ║
--- ║ to do that: part of the reason this plugin exists is because                 ║
--- ║ seeing the output in messages is annoying.                                   ║
--- ║                                                                              ║
--- ║ Otherwise, you could just always ignore output unless it's an error,         ║
--- ║ just so you could use a pretty `vim.ui.input`, but then I don't see much     ║
--- ║ point in having two separate mappings, one of which uses vim.fn.input and is ║
--- ║ syncronous, and another one that uses vim.ui.input, but is async (and ignores║
--- ║ output, or only displays errors)                                             ║
--- ║                                                                              ║
--- ║ If you would like that still, submit a PR or issue.                          ║
--- ╚══════════════════════════════════════════════════════════════════════════════╝
-
 ---Do `require('wife').shell()`, and display the output in a
 ---`vim.notify` if it's a single line,
 ---and in a new split if it's more than that.
