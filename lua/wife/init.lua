@@ -26,18 +26,23 @@ end
 ---Path to the shell you want `interactive_shell` to use.
 ---All the other public functions in this plugin don't care about this option.
 ---(and they use the `shell` option automatically)
----@field shell string
+---@field shell string?
 ---If you put *this character* (or string) as the first thing in
 ---your `require('wife').interactive_shell()` command,
 ---only errors are going to be displayed;
 ---Meaning, output on successful execution of the shell command is ignored.
----@field errorer string
+---@field errorer string?
+---Amount of lines, after which the output appears in a split.
+---If you set it to 3, 3 lines of output will appear in `vim.notify`,
+---and 4 and beyond will appear in a split.
+---@field cutoff integer?
 
 ---@type WifeOpts
 local plugin_opts = {
 	prompt = '󱕅 ',
 	shell = vim.o.shell,
 	errorer = ';',
+	cutoff = 1
 }
 
 ---@param opts WifeOpts?
@@ -152,9 +157,8 @@ function m.display(output, only_errors)
 		return
 	end
 
-	vim.print(output_lines)
-	if #output_lines == 1 then
-		vim.notify(unpack(output_lines), successful and vim.log.levels.OFF or vim.log.levels.ERROR)
+	if #output_lines <= plugin_opts.cutoff then
+		vim.notify(vim.fn.join(output_lines, '\n'), successful and vim.log.levels.OFF or vim.log.levels.ERROR)
 		return
 	end
 
