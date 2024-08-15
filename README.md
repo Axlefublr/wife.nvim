@@ -18,10 +18,10 @@ It uses `vim.ui.input` under the hood, and only looks so pretty to me because I 
 Using that plugin is completely optional; without it you'll get a command-mode like look.
 
 Type in whatever shell command you want (redirection and piping and stuff like that is supported), then <kbd>Enter</kbd> to accept your input. \
-To cancel, press <kbd>Escape</kbd>. For _default_ `vim.ui.input`, at least; For the one shown in the gif above, you have to press it twice, because you have to go to normal mode first.
+To cancel, press <kbd>Escape</kbd>. For _default_ `vim.ui.input`, at least; For the one shown in the video above, you have to press it twice, because you have to go to normal mode first.
 
 If the output of your command is just one (configurable) line, it's displayed using `vim.notify`. \
-If you have [`nvim-notify`](https://github.com/rcarriga/nvim-notify) installed, you'll see output the same way I do, in that showcase gif. \
+If you have [`nvim-notify`](https://github.com/rcarriga/nvim-notify) installed, you'll see output the same way I do, in that showcase video. \
 Otherwise, it will appear in `:messages`. (In other words, this plugin is optional too (any `vim.notify` replacer should work, fwiw (including `noice.nvim` I assume (yes I'm writing lisp in a readme, what about it))))
 
 If the command produces more than one (configurable) line of output, though, the output will be shown in a new split.
