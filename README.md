@@ -10,7 +10,7 @@ Executing shell commands in neovim is kind of a hassle.
 
 This plugin provides a nice interactive shell command execution experience for you:
 
-![](./img/showcase.gif)
+https://github.com/user-attachments/assets/45f9f16a-5acb-415b-9927-6cdea360e3e6
 
 Press The™ Wife™ Mapping™ (suggested later) and you come at a prompt. \
 It uses `vim.ui.input` under the hood, and only looks so pretty to me because I use [`dress.nvim`](https://github.com/Axlefublr/dress.nvim).
